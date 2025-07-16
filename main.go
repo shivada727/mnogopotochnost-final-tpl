@@ -85,8 +85,6 @@ func maxChunks(data []int) int {
 
 func main() {
 
-	rand.Seed(time.Now().UnixNano())
-
 	fmt.Printf("Генерируем %d целых чисел\n", SIZE)
 	data := generateRandomElements(SIZE)
 
