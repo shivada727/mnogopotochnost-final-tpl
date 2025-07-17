@@ -19,7 +19,7 @@ func generateRandomElements(size int) []int {
 
 	data := make([]int, size)
 	for i := 0; i < size; i++ {
-		data[i] = rand.Intn(1000000) + 1
+		data[i] = rand.Int()
 	}
 	return data
 }
@@ -53,29 +53,22 @@ func maxChunks(data []int) int {
 
 	for i := 0; i < CHUNKS; i++ {
 		wg.Add(1)
-		go func(chunkIndex int) {
+		startIndex := i * chunkSize
+		endIndex := startIndex + chunkSize
+		if i == CHUNKS-1 {
+			endIndex = len(data)
+		}
+		chunk := data[startIndex:endIndex]
+		go func(chunkIndex int, chunkData []int) {
 			defer wg.Done()
 
-			startIndex := chunkIndex * chunkSize
-			endIndex := startIndex + chunkSize
-
-			if chunkIndex == CHUNKS-1 {
-				endIndex = len(data)
-			}
-
-			if startIndex >= len(data) {
+			if len(chunkData) == 0 {
 				maxValues[chunkIndex] = 0
 				return
 			}
 
-			chunkMax := data[startIndex]
-			for j := startIndex; j < endIndex && j < len(data); j++ {
-				if data[j] > chunkMax {
-					chunkMax = data[j]
-				}
-			}
-			maxValues[chunkIndex] = chunkMax
-		}(i)
+			maxValues[chunkIndex] = maximum(chunkData)
+		}(i, chunk)
 	}
 
 	wg.Wait()

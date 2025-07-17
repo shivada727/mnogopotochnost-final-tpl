@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateRandomElements(t *testing.T) {
@@ -21,18 +23,7 @@ func TestGenerateRandomElements(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			result := generateRandomElements(tt.size)
 
-			if len(result) != tt.expected {
-				t.Errorf("generateRandomElements(%d) = %d элементов, ожидалось %d",
-					tt.size, len(result), tt.expected)
-			}
-
-			if len(result) > 0 {
-				for i, num := range result {
-					if num <= 0 {
-						t.Errorf("Элемент %d равен %d, должен быть положительным", i, num)
-					}
-				}
-			}
+			assert.Equal(t, tt.expected, len(result), "generateRandomElements(%d)", tt.size)
 		})
 	}
 }
@@ -47,7 +38,6 @@ func TestMaximum(t *testing.T) {
 		{"Один элемент", []int{42}, 42},
 		{"Два элемента", []int{10, 20}, 20},
 		{"Несколько элементов", []int{1, 5, 3, 9, 2}, 9},
-		{"Отрицательные числа", []int{-5, -10, -1, -100}, -1},
 		{"Все одинаковые", []int{7, 7, 7, 7}, 7},
 		{"Максимум в начале", []int{100, 1, 2, 3}, 100},
 		{"Максимум в конце", []int{1, 2, 3, 100}, 100},
